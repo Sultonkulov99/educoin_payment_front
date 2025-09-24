@@ -5,7 +5,7 @@ export default function PaymentForm() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [amount, setAmount] = useState("");
-  const [amountDisplay, setAmountDisplay] = useState(""); 
+  const [amountDisplay, setAmountDisplay] = useState("");
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -22,20 +22,29 @@ export default function PaymentForm() {
     fetchCenters();
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "true") {
+      alert("✅ To‘lovingiz muvofaqiyatli bo‘ldi!");
+      // agar qayta qaytishda yana chiqmasin desangiz:
+      // window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const handleAmountChange = (e) => {
-  // faqat raqamlarni olib qolamiz
-  const rawValue = e.target.value.replace(/\D/g, ""); 
+    // faqat raqamlarni olib qolamiz
+    const rawValue = e.target.value.replace(/\D/g, "");
 
-  setAmount(rawValue);
+    setAmount(rawValue);
 
-  if (rawValue) {
-    setAmountDisplay(
-      new Intl.NumberFormat("uz-UZ").format(Number(rawValue))
-    );
-  } else {
-    setAmountDisplay("");
-  }
-};
+    if (rawValue) {
+      setAmountDisplay(
+        new Intl.NumberFormat("uz-UZ").format(Number(rawValue))
+      );
+    } else {
+      setAmountDisplay("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
