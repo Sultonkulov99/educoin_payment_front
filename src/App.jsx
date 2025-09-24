@@ -5,6 +5,7 @@ export default function PaymentForm() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [amount, setAmount] = useState("");
+  const [amountDisplay, setAmountDisplay] = useState(""); 
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +22,21 @@ export default function PaymentForm() {
     fetchCenters();
   }, []);
 
+  const handleAmountChange = (e) => {
+  // faqat raqamlarni olib qolamiz
+  const rawValue = e.target.value.replace(/\D/g, ""); 
+
+  setAmount(rawValue);
+
+  if (rawValue) {
+    setAmountDisplay(
+      new Intl.NumberFormat("uz-UZ").format(Number(rawValue))
+    );
+  } else {
+    setAmountDisplay("");
+  }
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -33,13 +49,18 @@ export default function PaymentForm() {
       });
 
       const data = await res.json();
-      console.log(data)
 
       if (data?.paymentUrl) {
         window.location.href = data.paymentUrl;
       } else {
         alert("Xatolik: to'lov linkini olishning imkoni bo'lmadi!");
       }
+
+      setCenterId("");
+      setFromDate("");
+      setToDate("");
+      setAmount("");
+      setAmountDisplay("");
     } catch (error) {
       console.error(error);
       alert("Server bilan bog'lanishda xatolik!");
@@ -61,7 +82,6 @@ export default function PaymentForm() {
           Markaz uchun to‘lovni amalga oshiring
         </p>
 
-        {/* Center select */}
         <div>
           <label className="block text-gray-600 mb-2 font-medium">
             Markazni tanlang
@@ -81,7 +101,6 @@ export default function PaymentForm() {
           </select>
         </div>
 
-        {/* From Date */}
         <div>
           <label className="block text-gray-600 mb-2 font-medium">
             Qaysi sanadan
@@ -95,7 +114,6 @@ export default function PaymentForm() {
           />
         </div>
 
-        {/* To Date */}
         <div>
           <label className="block text-gray-600 mb-2 font-medium">
             Qaysi sanagacha
@@ -109,22 +127,20 @@ export default function PaymentForm() {
           />
         </div>
 
-        {/* Amount */}
         <div>
           <label className="block text-gray-600 mb-2 font-medium">
             Summa (so'm)
           </label>
           <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Masalan: 500000"
+            type="text"
+            value={amountDisplay}
+            onChange={handleAmountChange}
+            placeholder="Masalan: 500 000"
             className="w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none"
             required
           />
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
