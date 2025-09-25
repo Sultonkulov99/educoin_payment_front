@@ -1,4 +1,16 @@
 import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 
 export default function PaymentsTable() {
   const [payments, setPayments] = useState([]);
@@ -31,7 +43,7 @@ export default function PaymentsTable() {
 
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
-    return d.toLocaleDateString("ru-RU"); // 24.10.2025 format
+    return d.toLocaleDateString("ru-RU"); // 24.10.2025
   };
 
   const formatAmount = (value) => {
@@ -57,76 +69,80 @@ export default function PaymentsTable() {
   };
 
   if (loading) {
-    return <div className="p-6 text-center text-gray-500">Loading...</div>;
+    return (
+      <Typography variant="h6" align="center" sx={{ mt: 4, color: "gray" }}>
+        Loading...
+      </Typography>
+    );
   }
 
   return (
-    <div className="p-4 sm:p-6">
-      <h2 className="text-xl font-bold mb-4">Educoin to'lovlar jadvali</h2>
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
-        <table className="min-w-full bg-white text-sm sm:text-base">
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800">
-            <tr>
-              <th className="px-4 py-3 text-left font-semibold">T/R</th>
-              <th className="px-6 py-3 text-left font-semibold">Markaz nomi</th>
-              <th className="px-6 py-3 text-left font-semibold">Boshlanish vaqti</th>
-              <th className="px-6 py-3 text-left font-semibold">Tugash vaqti</th>
-              <th className="px-6 py-3 text-left font-semibold">To'lov turi</th>
-              <th className="px-6 py-3 text-left font-semibold">To'lov miqdori</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h5" gutterBottom fontWeight="bold">
+        Educoin to'lovlar jadvali
+      </Typography>
+      <TableContainer component={Paper} elevation={4}>
+        <Table>
+          <TableHead sx={{ backgroundColor: "primary.light" }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>T/R</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Markaz nomi</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Boshlanish vaqti</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Tugash vaqti</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>To'lov turi</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>To'lov miqdori</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {currentPayments.map((payment, index) => (
-              <tr
-                key={payment.id}
-                className="hover:bg-blue-50 transition duration-200"
-              >
-                <td className="px-4 py-3 text-gray-600">
+              <TableRow key={payment.id} hover>
+                <TableCell>
                   {(currentPage - 1) * rowsPerPage + (index + 1)}
-                </td>
-                <td className="px-6 py-3 font-medium">{payment.centerName}</td>
-                <td className="px-6 py-3">{formatDate(payment.startDate)}</td>
-                <td className="px-6 py-3">{formatDate(payment.endDate)}</td>
-                <td className="px-6 py-3">{payment.paidVia}</td>
-                <td className="px-6 py-3 font-semibold text-green-600">
+                </TableCell>
+                <TableCell>{payment.centerName}</TableCell>
+                <TableCell>{formatDate(payment.startDate)}</TableCell>
+                <TableCell>{formatDate(payment.endDate)}</TableCell>
+                <TableCell>{payment.paidVia}</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "green" }}>
                   {formatAmount(payment.amount)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center mt-4 space-x-4">
-          <button
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            mt: 3,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
             onClick={handlePrev}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${
-              currentPage === 1
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
           >
             Previous
-          </button>
-          <span className="text-gray-700 font-medium">
+          </Button>
+          <Typography variant="body1" sx={{ alignSelf: "center" }}>
             Page {currentPage} of {totalPages}
-          </span>
-          <button
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
             onClick={handleNext}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${
-              currentPage === totalPages
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
           >
             Next
-          </button>
-        </div>
+          </Button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
