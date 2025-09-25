@@ -30,8 +30,15 @@ export default function PaymentsTable() {
             endDate: p.endDate,
             paidVia: p.paidVia,
             amount: p.amount,
+            paidAt: p.paidAt,
           }))
         );
+
+        // sort by paidAt DESC (so'nggi to'lov birinchi chiqsin)
+        formatted.sort(
+          (a, b) => new Date(b.paidAt) - new Date(a.paidAt)
+        );
+
         setPayments(formatted);
         setLoading(false);
       })
@@ -42,8 +49,9 @@ export default function PaymentsTable() {
   }, []);
 
   const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
     const d = new Date(dateStr);
-    return d.toLocaleDateString("ru-RU"); // 24.10.2025
+    return d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU");
   };
 
   const formatAmount = (value) => {
@@ -91,6 +99,7 @@ export default function PaymentsTable() {
               <TableCell sx={{ fontWeight: "bold" }}>Tugash vaqti</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>To'lov turi</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>To'lov miqdori</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>To'lov qilingan vaqt</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -106,6 +115,7 @@ export default function PaymentsTable() {
                 <TableCell sx={{ fontWeight: "bold", color: "green" }}>
                   {formatAmount(payment.amount)}
                 </TableCell>
+                <TableCell>{payment.paidAt ? formatDate(payment.paidAt) : "-"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
