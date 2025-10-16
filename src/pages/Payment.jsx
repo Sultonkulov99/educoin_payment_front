@@ -12,7 +12,7 @@ export default function Payment() {
   useEffect(() => {
     const fetchCenters = async () => {
       try {
-        const res = await fetch("https://educoin.fixoo.uz/centers");
+        const res = await fetch("https://payment.fixoo.uz/centers");
         const data = await res.json();
         setCenters(data);
       } catch (error) {
@@ -42,7 +42,7 @@ export default function Payment() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://educoin.fixoo.uz/api/payment/checkout", {
+      const res = await fetch("https://payment.fixoo.uz/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ centerId, fromDate, toDate, amount }),

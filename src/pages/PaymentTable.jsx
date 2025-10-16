@@ -18,7 +18,7 @@ export default function PaymentsTable() {
 
   // ===== API FETCH =====
   useEffect(() => {
-    fetch("https://educoin.fixoo.uz/payments")
+    fetch("https://payment.fixoo.uz/payments")
       .then((res) => res.json())
       .then((data) => {
         // Center -> Payments flatten
